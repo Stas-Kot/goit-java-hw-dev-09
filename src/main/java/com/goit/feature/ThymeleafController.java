@@ -7,6 +7,7 @@ import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,14 +39,15 @@ public class ThymeleafController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ZoneId zid = ZoneId.of(timeZoneUtil.parseTimeZone(req));
         Clock clock = Clock.system(zid);
         initTime = LocalDateTime.now(clock).format(DateTimeFormatter.ofPattern(
                 "yyyy-MM-dd hh:mm:ss "
         )) + zid;
+
+        resp.setContentType("text/html");
+        resp.addCookie(new Cookie("lastTimezone", zid.toString()));
 
         Context simpleContext = new Context(
                 req.getLocale(),
