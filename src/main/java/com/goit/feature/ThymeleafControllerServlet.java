@@ -4,7 +4,9 @@ import com.goit.feature.util.TimeZoneUtil;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.web.servlet.JavaxServletWebApplication;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -19,18 +21,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @WebServlet("/time")
-public class ThymeleafController extends HttpServlet {
+public class ThymeleafControllerServlet extends HttpServlet {
     private TemplateEngine engine;
 
     private final TimeZoneUtil timeZoneUtil = new TimeZoneUtil();
     private String initTime;
 
     @Override
-    public void init() throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         engine = new TemplateEngine();
+        JavaxServletWebApplication application = JavaxServletWebApplication.buildApplication(config.getServletContext());
 
         FileTemplateResolver resolver = new FileTemplateResolver();
-        resolver.setPrefix("C:/Users/tatil/Documents/Java/goit-java-hw-dev-09/src/main/webapp/WEB-INF/templates/");
+        resolver.setPrefix("/WEB-INF/templates/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML5");
         resolver.setOrder(engine.getTemplateResolvers().size());
